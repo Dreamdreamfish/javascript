@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		div , p {
+			width: 100px;
+			height: 50px;
+			border: 1px solid red;
+			margin: 10px 0;
+		}
+	</style>
+</head>
+
+<body>
+	<div class = 's'></div>
+	<div></div>
+	<p></p>
+	<p></p>
+</body>
+<script>
+    var get = function ( selector, context, results ) {
+    	results = results || [];
+    	var rquickExpr = /^(?:#([\w-]+)|\.([\w-]+)|([\w]+)|(\*))$/,
+    	    m = rquickExpr.exec( selector );
+    	if( m ) {
+    		if ( m[ 1 ] ) {
+    			results = getId ( m[ 1 ], results );
+    		} else if ( m[ 2 ] ) {
+    			results = getClass ( m[ 2 ], context, results );
+    		} else if ( m[ 3 ]) {
+    			results = getTag ( m[ 3 ], context, results );
+    	    } else if ( m[ 4 ] ) {
+    	    	results = getTag ( m[ 4 ], context, results );
+    	    }
+    	}
+        return results;
+    };
+
+    //push方法的浏览器兼容解决方法
+    var mypush = function ( target, els ) {
+    	var j = target.length,
+    	    i = 0;
+    	while (target[j++] = els[i++]) {}
+    		target.length = j - 1;
+    };
+
+
+    //在规定的父元素(context)中查找元素，父元素是伪数组要加上[],确定是第几个
+   	var getTag = function ( tag, context, results ) { 
+   	    results = results || [];
+   	    context = context || document;
+   	    try {
+   	        results.push.apply ( results, context.getElementsByTagName ( tag ) );
+   	    } catch ( e ) {
+   	    	mypush ( results, context.getElementsByTagName ( tag ) );
+   	    }
+   	    return results; 
+   	};
+   	// id是唯一的，所以不用再某父元素寻找
+    var getId = function ( id,results ) {
+    	results = results || [];
+    	results.push.apply ( results, document.getElementById ( id ) );
+    	return results;
+    };
+    var getClass = function ( className, context,results ) {
+        results = results || [];
+        context = context || document;
+        results.push.apply( results, context.getElementsByClassName ( className ) );
+    };
+
+
+
+
+    var each = function ( arr, fn ) {
+        for (var i = 0; i < arr.length; i++) { 
+        	if ( fn.call( arr[i], i, arr[i]) === false ) {
+        	 break;
+        	}
+        }
+    };
+
+
+
+    each( get( 'p' ), function () {
+    	this.style.backgroundColor = "pink";
+    } );
+
+
+    //getElementsByClassName的浏览器兼容解决办法
+    var getClassName = function ( className, context,results ) {
+        var tags = document.getElementsByTagName( "*" );	
+        results = results || [];
+        if (document.getElementsByClassName) {
+        	results.push.apply( results, document.getElementsByClassName ( className ) );
+        } else {
+        	for ( var i = 0; i < tags.length; i++ ) {
+    	        if( ' ' + tags[i].className + ' '.indexOf(' ' + className + ' ') !== -1 ) {
+    	            results.push( tags[i] );
+    	        }
+    	    }
+        }
+        return results;
+    };
+    
+
+    each( getClassName( 's' ), function() {
+    	this.style.backgroundColor = 'blue';
+    } );
+</script>
+</html>

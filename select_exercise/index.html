@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <tr align="center">
+        <td>籍贯</td>
+        <td>
+            <select name="country" id="selPro" onchange="selCitys(this.value)">
+                <option value="">-请选择-</option>
+                <option value="北京">北京</option>
+                <option value="日本">日本</option>
+            </select>
+            <select name="city" id="selCity">
+                <option value="">-请选择-</option>
+            </select>
+        </td>
+    </tr>
+    <script>
+        var citys = new Array(2);
+        citys[0] = new Array("北京","东城区","海淀区","昌平区");
+        citys[1] = new Array("日本","京东","北海道","广岛","长崎");
+
+        //省市联动
+        function selCitys(val) {
+            var selCity = document.getElementById("selCity");
+            var options = selCity.getElementsByTagName("option");
+            while(options.length > 1 ) {
+                //while循环：条件符合时会一直循环执行；
+                //这一步是用于删除上一次onchange事件添加上的option.
+                selCity.removeChild(options[1]);
+            }
+            for(var i = 0; i < citys.length; i++) {
+                var inarr = citys[i];
+                var instr = inarr[0];
+                if(val == instr) {
+                    for(var j = 1; j < inarr.length; j++) {
+                        var str = inarr[j];
+                        var option = document.createElement("option");
+                        var text = document.createTextNode(str)
+                        //selCity.innerHTML = "<option>" + str + "</option>";innerHTML会覆盖所有的后代元素。
+                        option.appendChild(text);
+                        selCity.appendChild(option);
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

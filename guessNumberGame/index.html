@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Number guessing game</title>
+	<link rel="stylesheet" type="text/css" href="你好.js">
+	<style>
+		html {
+			font-family: sans-serif;
+		}
+
+		body {
+			width: 50%;
+			max-width: 800px;
+			min-width: 480px;
+			margin: 0 auto; 
+		}
+
+		.lastResult {
+			color: white;
+			padding: 3px;
+		}
+	</style>
+</head>
+
+<body>
+    <h1>猜数字游戏</h1>
+
+    <p>我们可以选择一个1到100之间的数字。看你是否能在10次以内猜到，我们将在每次告诉你猜高了还是猜低了。</p>
+<div class="form">
+	<label for="guessField">填入一个数字：</label><input type="text" id="guessField" class="guessField">
+	<input type="submit" value="Submit guess" class="guessSubmit">
+</div>
+
+<div class="resultParas">
+	<p class="guesses"></p>
+	<p class="lastResult"></p>
+	<p class="lowOrHi"></p>
+</div>
+
+</body>
+
+<script>
+var randomNumber = Math.floor(Math.random() * 100) + 1:
+
+var guesses=document.querySelector('.guesses');
+var lastResult=document.querySelector('.lastResult');
+var lowOrHi=document.querySelector('.lowOrHi');
+
+var guessSubmit=document.querySelector('.guessSubmit');
+var guessField=document.querySelector('.guessField');
+
+var guessCount=1;
+var resetButton;
+checkGuess();
+</script>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+    var $ = function(tagName) {
+        return document.getElementById(tagName);
+    };
+    //邮箱检测
+    function check_idea15(s) {
+        var reEmail = /^\w+([-+.]\w+*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+        var b_email = reEmail.test(s);
+        if (b_email) {
+            $("#span_15").innerHTML = '<img src="images/yesok.gif">';
+        } else {
+            $("#span_15").innerHTML = '<img src="images/yesno.gif">邮箱不可用';
+        }
+    };
+    //整数检测
+    flag1 = [0,0,0];
+    function check_AboutSequence(s) {
+        var reNum = /^[0-9]{1,20}$/;
+        var b_Num = reNum.test(s);
+        if(b_Num) {
+            $("#span_Sequence").innerHTML = '<img src="images/yesok.gif">';
+            flag1[1] = 1;
+        } else {
+            $("#span_Sequence").innerHTML = '<img src="images/yesno.gif">请填写整数';
+                flag1[1] = 0;
+        }
+        check_data1();
+    }
+
+    function check_data1() {
+        if (flag1[0] == 1 && flag1[1] == 1 && flag1[2] == 1) {
+            $("#Btn_OK").disabled = false;
+        } else {
+            $("#Btn_OK").disabled = true;
+        }
+    }
+    var flag8 = [0,0,0];
+    function check_ProductName(s) {
+        if (s == "") {
+            $("#span_ProductName").innerHTML ="<img src='images/yesno.gif'>请输入产品名称";
+            flag8[0] = 0;
+        } else {
+            $("#span_ProductName").innerHTML ="<img src='images/yesok.gif'>";
+            flag8[0] = 1;
+        }
+        check_data8();
+    }
+
+    function check_ProductID(s) {
+        if (s == "") {
+            $("#span_ProductID").innerHTML ="<img src='images/yesno.gif'>请输入产品编号";
+            flag8[1] = 0;
+        } else {
+            $("#span_ProductID").innerHTML ="<img src='images/yesok.gif'>";
+            flag8[1] = 1;
+        }
+        check_data8();
+    }
+
+    function check_Price(s) {
+        if (s == "") {
+            $("#span_Price").innerHTML ="<img src='images/yesno.gif'>请输入产品价格";
+            flag8[2] = 0;
+        } else {
+            $("#span_Price").innerHTML ="<img src='images/yesok.gif'>";
+            flag8[2] = 1;
+        }
+        check_data8();
+    }
+    //判断上面三项有没有填写，如果没有填写完整，“确定添加”按钮不可视。
+    function check_data8() {
+        if (flag8[0] == 1 && flag8[1] == 1 && flag8[2] == 1) {
+            $("#Btn_OK").disabled = false;
+        } else {
+            $("#Btn_OK").disabled = true;
+        }
+    }
+
+    //用户信息检测
+    flag4 = [0,0,0];
+    function check_Password(obj) {
+        var pwd = $("Password").value;
+        var reChinese = /[\u0391-\uFFE5]+/;
+        var b_chinese = reChinese.test(pwd);
+        var reSpace = /\s+/;
+        var b_space = reSpace.test(pwd);
+        if (pwd.length < 6) { //长度测试
+            $("#span_Password").innerHTML = "<img src='images/yesno.gif'>密码长度不能小于6";
+            flag4[1] = 0;
+            check_data4();
+        } else if(b_chinese) { //检测合法性：不能包含汉子
+            $("#span_Password").innerHTML = "<img src='images/yesno.gif'>密码不能包含中文";
+            flag4[1] = 0;
+            check_data4();
+        } else if(b_space) {  //检测合法性：不能包含空格
+            $("#span_Password").innerHTML = "<img src='images/yesno.gif'>密码不能包含空格";
+            flag4[1] = 0;
+            check_data4();
+        } else { //定义对应的消息提示
+            var num = getResult(pwd);
+            var msg = Array("<img src='images/bad.gif'>密码强度差","<img src='images/comm.gif'>" +
+                    "密码强度一般", "<img src='images/good.gif'>密码强度强壮");
+            $("#span_Password").innerHTML = msg[num];
+            if ($("#Password").value != "") {
+                check_vPassword();
+            }
+            return flag4[1] = 1;
+            check_data4();
+        }
+    }
+    //定义检测函数，返回0/1/2分别代表差、一般、强
+    function getResult(s) {
+        var ls = -1;
+        if (s.match(/[a-z]/ig)) {
+            ls++;
+        }
+        if (s.match(/[0-9]/ig)) {
+            ls++;
+        }
+        if (s.match(/ (.[^a-z0-9])/ig)) {
+            ls++;
+        }
+        return ls;
+    }
+    //密码一致性检测
+    function check_vPassword() {
+        var pwd = $("Password").value.toString();
+        var check_pwd = $("vPassword").value.toString();
+        if(flag4[1] == 1) {
+            if(pwd == check_pwd) {
+                $("#span_vPassword").innerHTML = "<img src='images/yesok.gif'>密码可以使用";
+                flag4[2] = 1;
+                check_data4();
+            } else {
+                $("#span_vPassword").innerHTML = "<img src='images/yesno.gif'>两次密码不相同";
+                flag4[2] = 0;
+                check_data4();
+            }
+        }
+    }
+    //用户名合法性检测
+    function check_UserName(id_name) { //只能是字母和数字，是否相同用AJAX判断
+        var reId = /^[\w\u0391-\uFFE5]+$/;
+        var b_id = reId.test(id_name);
+        if (!b_id) {
+            $("#span_UserName").innerHTML = "<img src='images/yesno.gif'>非法用户名";
+            flag4[0] = 0;
+            check_data4();
+        } else { //合法用户名用ajax的checkid()检测是否被注册过
+            checkUserName(id_name);
+        }
+    }
+    function check_data4() {
+        if(flag4[0] == 1 && flag4[1] == 1 && flag4[2] == 1) {
+            $("#Btn_OK").disabled = false;
+        } else {
+            $("#Btn_OK").disabled = true;
+        }
+    }
+
+
+    //用户名是否已注册校验
+    function checkUserName(regid) {
+        var xmlhttp;
+        try {
+            xmlhttp = new XMLHttpRequest();
+        } catch(e) {
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                var data = xmlhttp.responseText;
+                id_result(data);
+            } else {
+                $("#span_UserName").innerHTML = "正在进行用户名校验";
+            }
+        }
+        xmlhttp.open("post","Check_UserName.asp",true);
+        xmlhttp.setRequestHeader("content-type","application/x-www-form-urlencoded");
+        xmlhttp.send("regid"+escape(regid));
+    }
+    function id_result(data) {
+        var resultbox = $("#span_UserName");
+        if(data == 1) {
+            resultbox.innerHTML = "<img src='images/yesok.gif'>用户名可用";
+            flag4[0]=1;
+            check_data4();
+        } else {
+            resultbox.innerHTML = "<img src='images/yesno.gif'>该用户名已注册";
+            flag4[0]=0;
+            check_data4();
+        }
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>轮播图</title>
+</head>
+<style type="text/css">
+	* {
+		margin: 0;
+		padding: 0;
+	}
+	.container {
+		width: 800px;
+		height: 500px;
+		margin: 100px auto;
+		position: relative;
+		overflow: hidden;
+	}
+	.flash {
+		width: 800px;
+		height: 500px;
+		top: 0;
+		left: 0;
+		position: absolute;
+	}
+	.flash>img {
+		display: block;
+	}
+	.btn {
+		width: 360px;
+		height: 20px;
+		bottom: 20px;
+		left: 180px;
+		position: absolute;
+		z-index: 20;
+	}
+	.btn>ul>li {
+		list-style: none;
+		display: block;
+		width: 18px;
+		height: 20px;
+		border-radius: 10px;
+		border: 1px solid #FFF;
+		margin-left: 40px;
+		float: left;
+		cursor: pointer;
+	}
+	.btn>ul>li.hover {
+		background-color: rgba(255,255,255,.4);
+	}
+</style>
+<body>
+	<div class="container">
+		<div class="flash">
+			<img src="images/1.jpg"/>
+			<img src="images/2.jpg"/>
+			<img src="images/3.jpg"/>
+			<img src="images/4.jpg"/>
+			<img src="images/5.jpg"/>
+			<img src="images/6.jpg"/>
+		</div>
+		<div class="btn">
+			<ul>
+				<li class="hover"></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
+		</div>
+	</div>
+</body>
+<script src="js/jquery-1.12.4.js"></script>
+<script type="text/javascript">
+	var index = 0;
+	var timer = "";
+    $(function(){
+    	$('.btn>ul>li').hover(function() {
+    		index = $(this).index();
+    		$(this).addClass('hover').siblings('li').removeClass('hover');
+			$('.flash').animate({top:-(index*500)},400);
+    	});    	
+    });
+    (function autoPlay() {
+    	timer = setInterval(function() {
+    		index++;
+    		if (index > 5) {
+    			index = 1;
+    		}
+    		$('.btn>ul>li').eq(index).addClass('hover').siblings('li').removeClass('hover');
+			$('.flash').animate({top:-(index*500)},400);
+    	},2000)
+    })();
+
+</script>
+</html>
